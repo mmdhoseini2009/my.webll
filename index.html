@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وب‌سایت کامل با جستجو و اعلانات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* استایل کلی صفحه */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* کادر جستجو در بالای صفحه */
+        .search-bar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 16px;
+            width: 300px;
+            outline: none;
+        }
+
+        .search-bar button {
+            background: linear-gradient(135deg, #ff6f61, #ff4d4d);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            transform: scale(1.05);
+        }
+
+        /* محتوای صفحات */
+        .page {
+            flex: 1;
+            display: none;
+            padding: 80px 20px 20px; /* فاصله برای کادر جستجو و نوار ناوبری */
+            text-align: center;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* نوار ناوبری پایین */
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px 20px 0 0;
+            padding: 15px 30px;
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        /* دکمه‌ها */
+        .nav-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease;
+            border-radius: 50%;
+        }
+
+        .nav-button:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .nav-button:active {
+            transform: scale(0.95);
+        }
+
+        .nav-button.active {
+            background: linear-gradient(135deg, #ff6f61, #ff4d4d);
+            box-shadow: 0 0 20px rgba(255, 111, 97, 0.6);
+        }
+
+        /* افکت نورپردازی */
+        .nav-button.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 111, 97, 0.4), transparent);
+            border-radius: 15px;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% {
+                opacity: 0.6;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+    <script>
+        // JavaScript برای تغییر صفحات و حالت دکمه‌ها
+        function showPage(pageId) {
+            // مخفی کردن همه صفحات
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+
+            // نمایش صفحه انتخاب شده
+            document.getElementById(pageId).classList.add('active');
+
+            // تغییر حالت دکمه‌ها
+            const buttons = document.querySelectorAll('.nav-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+        }
+
+        // نمایش صفحه پیش‌فرض (خانه) هنگام بارگذاری
+        window.onload = () => showPage('home');
+    </script>
+</head>
+<body>
+
+    <!-- کادر جستجو در بالای صفحه -->
+    <div class="search-bar">
+        <input type="text" placeholder="جستجو...">
+        <button onclick="showPage('search')"><i class="fas fa-search"></i> جستجو</button>
+    </div>
+
+    <!-- صفحات -->
+    <div id="home" class="page">
+        <h1>خانه</h1>
+        <p>به صفحه اصلی خوش آمدید!</p>
+    </div>
+
+    <div id="explore" class="page">
+        <h1>اکتشاف</h1>
+        <p>محتوای جذاب را کشف کنید.</p>
+    </div>
+
+    <div id="favorites" class="page">
+        <h1>علاقه‌مندی‌ها</h1>
+        <p>محتوای مورد علاقه خود را اینجا ببینید.</p>
+    </div>
+
+    <div id="profile" class="page">
+        <h1>پروفایل</h1>
+        <p>اطلاعات پروفایل شما.</p>
+    </div>
+
+    <div id="notifications" class="page">
+        <h1>اعلانات</h1>
+        <p>اعلانات جدید شما اینجا نمایش داده می‌شود.</p>
+    </div>
+
+    <div id="search" class="page">
+        <h1>جستجو</h1>
+        <p>نتایج جستجو برای عبارت وارد شده.</p>
+    </div>
+
+    <!-- نوار ناوبری پایین -->
+    <div class="navbar">
+        <button class="nav-button" data-page="home" onclick="showPage('home')">
+            <i class="fas fa-home"></i> خانه
+        </button>
+        <button class="nav-button" data-page="explore" onclick="showPage('explore')">
+            <i class="fas fa-compass"></i> اکتشاف
+        </button>
+        <button class="nav-button" data-page="favorites" onclick="showPage('favorites')">
+            <i class="fas fa-heart"></i> علاقه‌مندی‌ها
+        </button>
+        <button class="nav-button" data-page="notifications" onclick="showPage('notifications')">
+            <i class="fas fa-bell"></i> اعلانات
+        </button>
+        <button class="nav-button" data-page="profile" onclick="showPage('profile')">
+            <i class="fas fa-user"></i> پروفایل
+        </button>
+    </div>
+
+</body>
+</html>
